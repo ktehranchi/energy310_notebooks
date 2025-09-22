@@ -1,0 +1,8 @@
+generator_id,bus,carrier,p_nom,marginal_cost,efficiency,co2_emissions
+coal_1,bus_1,coal,1500,40,0.38,0.82
+gas_1,bus_2,gas,800,80,0.55,0.35
+gas_2,bus_3,gas,600,85,0.50,0.35
+nuclear_1,bus_1,nuclear,1200,10,0.33,0
+hydro_1,bus_4,hydro,400,5,0.90,0
+wind_1,bus_2,wind,600,0,1.0,0
+solar_1,bus_3,solar,300,0,1.0,0

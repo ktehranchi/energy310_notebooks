@@ -1,0 +1,84 @@
+# Configuration file for energy system analysis workflow
+
+# Scenarios to analyze
+scenarios:
+  baseline:
+    description: "Current energy system"
+    renewable_target: 0.3
+    storage_capacity: 1000  # MW
+    co2_limit: null
+  
+  high_renewable:
+    description: "High renewable penetration"
+    renewable_target: 0.8
+    storage_capacity: 5000  # MW
+    co2_limit: null
+  
+  carbon_neutral:
+    description: "Carbon neutral scenario"
+    renewable_target: 0.9
+    storage_capacity: 8000  # MW
+    co2_limit: 0  # tons CO2/year
+
+# Years to analyze
+years: [2025, 2030, 2035]
+
+# Data sources and processing
+data_source:
+  demand_url: "https://example.com/demand_data.csv"
+  renewable_url: "https://example.com/renewable_profiles.csv"
+  network_url: "https://example.com/network_topology.csv"
+  use_cached: true
+
+data_processing:
+  temporal_resolution: "hourly"  # hourly, daily, weekly
+  spatial_aggregation: "country"  # country, state, region
+  weather_years: [2019, 2020, 2021]
+
+# Solver configuration
+solver:
+  name: "gurobi"  # gurobi, cplex, glpk, cbc
+  solver_options:
+    threads: 4
+    method: 2
+    crossover: 0
+  optimization_options:
+    skip_iterations: true
+    track_iterations: false
+    min_iterations: 4
+
+# Plotting configuration
+plotting:
+  style: "seaborn"
+  dpi: 300
+  figsize: [12, 8]
+  colors:
+    coal: "#8B4513"
+    gas: "#A9A9A9"
+    nuclear: "#FF6347"
+    wind: "#90EE90"
+    solar: "#FFD700"
+    hydro: "#87CEEB"
+    storage: "#9370DB"
+
+# Sensitivity analysis parameters
+sensitivity_analysis:
+  parameters:
+    - "renewable_cost_reduction"
+    - "storage_cost_reduction"
+    - "co2_price"
+    - "demand_growth"
+  ranges:
+    renewable_cost_reduction: [0, 0.1, 0.2, 0.3, 0.4, 0.5]
+    storage_cost_reduction: [0, 0.2, 0.4, 0.6, 0.8]
+    co2_price: [0, 50, 100, 200, 500]  # $/ton CO2
+    demand_growth: [-0.1, 0, 0.1, 0.2, 0.3]  # annual growth rate
+
+# Report configuration
+report:
+  title: "Energy System Analysis Results"
+  author: "Energy 310 Class"
+  institution: "University"
+  include_sensitivity: true
+  include_maps: true
+  output_format: "html"  # html, pdf, both
