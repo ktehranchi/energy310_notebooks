@@ -1,0 +1,160 @@
+# Snakemake workflow for energy system analysis
+# This workflow demonstrates a complete research pipeline for PyPSA energy modeling
+
+import pandas as pd
+import numpy as np
+
+# Configuration
+configfile: "config.yaml"
+
+# Define wildcards for scenarios
+SCENARIOS = config["scenarios"]
+YEARS = config["years"]
+
+# Rule to generate all outputs
+rule all:
+    input:
+        "results/summary_report.html",
+        expand("results/plots/generation_mix_{scenario}_{year}.png", 
+               scenario=SCENARIOS, year=YEARS),
+        expand("results/data/optimized_network_{scenario}_{year}.nc", 
+               scenario=SCENARIOS, year=YEARS),
+        "results/comparison_table.csv"
+
+# Download and prepare input data
+rule download_data:
+    output:
+        demand="data/raw/demand_data.csv",
+        renewables="data/raw/renewable_profiles.csv",
+        network="data/raw/network_topology.csv"
+    params:
+        data_source=config["data_source"]
+    script:
+        "scripts/download_data.py"
+
+# Process raw data into model-ready format
+rule process_data:
+    input:
+        demand="data/raw/demand_data.csv",
+        renewables="data/raw/renewable_profiles.csv",
+        network="data/raw/network_topology.csv"
+    output:
+        demand="data/processed/demand_{year}.csv",
+        renewables="data/processed/renewables_{year}.csv",
+        network="data/processed/network_{year}.csv"
+    params:
+        year="{year}",
+        processing_config=config["data_processing"]
+    script:
+        "scripts/process_data.py"
+
+# Build PyPSA network for each scenario and year
+rule build_network:
+    input:
+        demand="data/processed/demand_{year}.csv",
+        renewables="data/processed/renewables_{year}.csv",
+        network="data/processed/network_{year}.csv"
+    output:
+        "data/networks/network_{scenario}_{year}.nc"
+    params:
+        scenario="{scenario}",
+        year="{year}",
+        scenario_config=lambda wildcards: config["scenarios"][wildcards.scenario]
+    script:
+        "scripts/build_network.py"
+
+# Solve the optimization problem
+rule solve_network:
+    input:
+        "data/networks/network_{scenario}_{year}.nc"
+    output:
+        "results/data/optimized_network_{scenario}_{year}.nc"
+    params:
+        solver_config=config["solver"],
+        scenario="{scenario}",
+        year="{year}"
+    resources:
+        mem_mb=8000,
+        runtime=60
+    script:
+        "scripts/solve_network.py"
+
+# Generate plots for each scenario
+rule plot_results:
+    input:
+        "results/data/optimized_network_{scenario}_{year}.nc"
+    output:
+        generation="results/plots/generation_mix_{scenario}_{year}.png",
+        map_plot="results/plots/network_map_{scenario}_{year}.png",
+        time_series="results/plots/dispatch_{scenario}_{year}.png"
+    params:
+        scenario="{scenario}",
+        year="{year}",
+        plot_config=config["plotting"]
+    script:
+        "scripts/plot_results.py"
+
+# Calculate system metrics
+rule calculate_metrics:
+    input:
+        expand("results/data/optimized_network_{scenario}_{year}.nc", 
+               scenario=SCENARIOS, year=YEARS)
+    output:
+        "results/data/system_metrics.csv"
+    script:
+        "scripts/calculate_metrics.py"
+
+# Compare scenarios
+rule compare_scenarios:
+    input:
+        "results/data/system_metrics.csv"
+    output:
+        "results/comparison_table.csv",
+        "results/plots/scenario_comparison.png"
+    script:
+        "scripts/compare_scenarios.py"
+
+# Generate final report
+rule generate_report:
+    input:
+        metrics="results/data/system_metrics.csv",
+        comparison="results/comparison_table.csv",
+        plots=expand("results/plots/generation_mix_{scenario}_{year}.png", 
+                    scenario=SCENARIOS, year=YEARS)
+    output:
+        "results/summary_report.html"
+    script:
+        "scripts/generate_report.py"
+
+# Rule for sensitivity analysis
+rule sensitivity_analysis:
+    input:
+        expand("results/data/optimized_network_{scenario}_{year}.nc", 
+               scenario=SCENARIOS, year=YEARS)
+    output:
+        "results/sensitivity_analysis.csv",
+        "results/plots/sensitivity_plot.png"
+    params:
+        sensitivity_params=config["sensitivity_analysis"]
+    script:
+        "scripts/sensitivity_analysis.py"
+
+# Clean intermediate files
+rule clean:
+    shell:
+        """
+        rm -rf data/processed/*
+        rm -rf data/networks/*
+        rm -rf results/data/*
+        rm -rf results/plots/*
+        """
+
+# Rule to archive results
+rule archive_results:
+    input:
+        "results/summary_report.html",
+        "results/comparison_table.csv"
+    output:
+        "results/archive/results_{}.tar.gz".format(pd.Timestamp.now().strftime("%Y%m%d_%H%M%S"))
+    shell:
+        "tar -czf {output} results/"
