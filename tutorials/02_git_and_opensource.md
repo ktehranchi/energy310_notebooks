@@ -313,7 +313,31 @@ git commit -m "Add dataset with DVC"
 
 ### Environment Management
 
-#### Conda Environment Files
+#### UV Project Configuration (Recommended)
+Modern Python package management with fast dependency resolution:
+
+```toml
+# pyproject.toml
+[project]
+name = "energy-research"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+    "pypsa>=0.21.0",
+    "pandas>=1.3.0,<2.0.0",
+    "matplotlib>=3.4.0",
+    "seaborn>=0.11.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest",
+    "black",
+    "jupyter",
+]
+```
+
+#### Conda Environment Files (Legacy)
 ```yaml
 name: energy-research
 channels:
@@ -333,6 +357,23 @@ pypsa==0.21.0
 pandas>=1.3.0,<2.0.0
 matplotlib>=3.4.0
 seaborn>=0.11.0
+```
+
+#### Environment Setup Commands
+
+```bash
+# Using UV (recommended)
+uv sync                    # Install/sync dependencies
+uv add new-package        # Add a new dependency
+uv run python script.py   # Run in environment
+uv shell                  # Activate shell
+
+# Using conda (legacy)
+conda env create -f environment.yml
+conda activate energy-research
+
+# Using pip
+pip install -r requirements.txt
 ```
 
 ### Computational Notebooks
@@ -360,14 +401,37 @@ Brief description of your research project.
 
 ### Requirements
 - Python 3.9+
-- See requirements.txt for packages
+- See pyproject.toml for packages
 
-### Setup
+### Setup using UV (recommended)
 ```bash
 git clone https://github.com/username/project.git
 cd project
+uv sync  # Creates environment and installs dependencies
+```
+
+### Alternative setup methods
+```bash
+# Using conda (legacy)
 conda env create -f environment.yml
 conda activate energy-research
+
+# Using pip
+pip install -r requirements.txt
+```
+
+## Usage
+
+```bash
+# Run scripts with UV
+uv run python analysis.py
+
+# Start Jupyter
+uv run jupyter lab
+
+# Or activate environment first
+uv shell
+python analysis.py
 ```
 
 ## Usage
@@ -410,9 +474,10 @@ MIT License - see LICENSE file
    touch src/__init__.py
    ```
 
-4. **Create environment file**
-   - Copy the environment.yml from this course repository
-   - Modify for your specific needs
+4. **Set up project configuration**
+   - Create a `pyproject.toml` file with your dependencies
+   - Or copy the `pyproject.toml` from this course repository
+   - Initialize the UV project: `uv sync`
 
 5. **Write a proper README**
    - Describe your research question

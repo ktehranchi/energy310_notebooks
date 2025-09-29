@@ -19,32 +19,60 @@ This repository contains three comprehensive modules designed to teach the funda
 
 ### Installation
 
-1. **Clone the repository:**
+1. **Install uv (if not already installed):**
+   ```bash
+   # On macOS and Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   
+   # Or using pip
+   pip install uv
+   ```
+
+2. **Clone the repository:**
    ```bash
    git clone https://github.com/ktehranchi/energy310_notebooks.git
    cd energy310_notebooks
    ```
 
-2. **Set up the environment:**
-   
-   Using conda (recommended):
+3. **Set up the environment using uv (recommended):**
    ```bash
-   conda env create -f environment.yml
-   conda activate energy310
+   # UV automatically creates a virtual environment and installs dependencies
+   uv sync
    ```
    
-   Or using pip:
+   Alternative using pip:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Launch Jupyter Lab:**
+4. **Launch Jupyter Lab:**
    ```bash
+   # Using uv (runs in the project's virtual environment)
+   uv run jupyter lab
+   
+   # Or if using pip
    jupyter lab
    ```
 
-4. **Start with the first notebook:**
+5. **Start with the first notebook:**
    Open `notebooks/01_what_is_pypsa.ipynb` and begin learning!
+
+### Understanding UV Environments
+
+UV creates **project-local virtual environments** that are automatically managed:
+
+- **Automatic Environment Creation**: UV creates a `.venv` directory in your project folder
+- **Dependency Management**: Dependencies are tracked in `pyproject.toml` and locked in `uv.lock`
+- **No Manual Activation**: Use `uv run <command>` to execute commands in the environment
+- **Fast Installation**: UV resolves and installs packages much faster than conda or pip
+- **Reproducible Builds**: The `uv.lock` file ensures identical environments across machines
+
+**Key UV commands:**
+- `uv sync` - Install/update all dependencies
+- `uv add <package>` - Add a new dependency
+- `uv remove <package>` - Remove a dependency
+- `uv run <command>` - Run a command in the project environment
+- `uv shell` - Activate the environment in your current shell
 
 ## 📖 Module Descriptions
 
@@ -103,7 +131,8 @@ Build scalable, reproducible analysis workflows:
 ```
 energy310_notebooks/
 ├── README.md                           # This file
-├── environment.yml                     # Conda environment specification
+├── pyproject.toml                      # UV project configuration and dependencies
+├── environment.yml                     # Legacy conda environment specification
 ├── requirements.txt                    # Python package requirements
 ├── .gitignore                         # Git ignore file
 │

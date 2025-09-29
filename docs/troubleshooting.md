@@ -9,14 +9,18 @@
 
 **Solution**:
 ```bash
-# Install CBC solver (open source)
-conda install -c conda-forge coincbc
+# Install CBC solver (open source) using UV
+uv add pulp  # CBC solver is included with PuLP
 
 # Or install Gurobi (requires license)
+uv add gurobipy  # Requires Gurobi license
+
+# Using conda (legacy method)
+conda install -c conda-forge coincbc
 conda install -c gurobi gurobi
 
 # Test solver availability
-python -c "import pypsa; print(pypsa.Network().solvers)"
+uv run python -c "import pypsa; print(pypsa.Network().solvers)"
 ```
 
 #### Issue: Memory errors with large networks
@@ -162,28 +166,44 @@ git commit -m "Resolve merge conflicts"
 **Symptoms**: Cannot install packages due to dependency conflicts.
 
 **Solutions**:
-1. Create fresh environment:
+1. Recreate environment using UV:
+   ```bash
+   # Remove the virtual environment
+   rm -rf .venv
+   
+   # Recreate and sync dependencies
+   uv sync
+   ```
+
+2. Using conda (legacy method):
    ```bash
    conda deactivate
    conda env remove -n energy310
    conda env create -f environment.yml
    ```
 
-2. Use mamba for faster solving:
+3. Use UV for faster dependency resolution:
    ```bash
-   conda install mamba
-   mamba env create -f environment.yml
+   # UV automatically resolves conflicts more efficiently
+   uv add conflicting-package
    ```
 
 #### Issue: Environment not found
-**Symptoms**: Cannot activate conda environment.
+**Symptoms**: Cannot run commands in the project environment.
 
 **Solution**:
 ```bash
-# List available environments
-conda env list
+# Using UV - check if project is set up
+ls .venv  # Should exist after uv sync
 
-# Recreate if missing
+# If missing, sync the environment
+uv sync
+
+# Run commands in the environment
+uv run python --version
+
+# Using conda (legacy method)
+conda env list
 conda env create -f environment.yml
 ```
 
