@@ -224,7 +224,21 @@ pip install jupyterlab
 
 ## Testing Your Installation
 
-Run this test script to verify everything works:
+Run this verification script to ensure everything works correctly:
+
+```bash
+# Using UV
+uv run python verify_installation.py
+
+# Using conda (legacy method)
+python verify_installation.py
+```
+
+The script will test all core packages and PyPSA functionality. You should see ✓ marks for all core packages.
+
+### Manual Testing
+
+You can also test manually:
 
 ```python
 # test_installation.py
