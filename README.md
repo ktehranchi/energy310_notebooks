@@ -12,20 +12,12 @@ This repository contains three comprehensive modules designed to teach the funda
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.9+
-- Git
-- Basic knowledge of Python and command line
-
 ### Installation
 
 1. **Install uv (if not already installed):**
    ```bash
    # On macOS and Linux
    curl -LsSf https://astral.sh/uv/install.sh | sh
-   
-   # Or using pip
-   pip install uv
    ```
 
 2. **Clone the repository:**
@@ -38,20 +30,15 @@ This repository contains three comprehensive modules designed to teach the funda
    ```bash
    # UV automatically creates a virtual environment and installs dependencies
    uv sync
-   ```
-   
-   Alternative using pip:
-   ```bash
-   pip install -r requirements.txt
+
+   # But because wwant to install extra dependancys specified in the pyproject use this command
+   uv sync --extra geographic --extra advanced
    ```
 
 4. **Launch Jupyter Lab:**
    ```bash
    # Using uv (runs in the project's virtual environment)
    uv run jupyter lab
-   
-   # Or if using pip
-   jupyter lab
    ```
 
 5. **Start with the first notebook:**

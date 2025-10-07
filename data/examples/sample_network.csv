@@ -1,6 +1,0 @@
-bus_id,x,y,v_nom,carrier
-bus_1,0,0,400,AC
-bus_2,1,0,400,AC
-bus_3,2,0,400,AC
-bus_4,1,1,400,AC
-bus_5,0.5,0.5,230,AC

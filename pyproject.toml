@@ -3,7 +3,7 @@ name = "energy310-notebooks"
 version = "0.1.0"
 description = "Course materials for graduate-level energy systems analysis using PyPSA and modern software development practices"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [
     {name = "Energy 310 Teaching Team"}
 ]
@@ -22,8 +22,8 @@ dependencies = [
     "jupyterlab>=3.0.0",
     "ipywidgets>=7.6.0",
     
-    # PyPSA and energy modeling
-    "pypsa>=0.21.0",
+    # PyPSA 
+    "pypsa>=0.30.0",
     
     # Optimization
     "pulp>=2.5.0",
@@ -45,11 +45,12 @@ geographic = [
     "rasterio>=1.2.0",
     "xarray>=0.19.0",
     "netcdf4",
+    "folium",
+    "mapclassify"
 ]
 advanced = [
     # Advanced packages that might have complex dependencies
     "atlite>=0.2.4",
-    "powerplantmatching>=0.4.8",
     "snakemake>=7.0.0",
     "plotly>=5.0.0",
     "hvplot>=0.7.0",
