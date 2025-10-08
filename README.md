@@ -1,7 +1,10 @@
 # Energy 310: Introduction to Energy Systems Modeling
+### Stanford University, Energy Science and Engineering
+
 Teaching Team:
- - Professor Ines Azevedo
+ - Professor Inês Azevedo
  - Kamran Tehranchi, PhD Candidate
+
 
 ## 📚 Course Modules
 
