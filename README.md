@@ -1,9 +1,15 @@
-# Energy 310: Electricity System Simulation and Optimization
-
+# Energy 310: Introduction to Energy Systems Modeling
+Teaching Team:
+ - Professor Ines Azevedo
+ - Kamran Tehranchi, PhD Candidate
 
 ## 📚 Course Modules
 
 1. **[What is PyPSA?](notebooks/01_what_is_pypsa.ipynb)** - Introduction to power system analysis with Python
+2. **[Intro to PyPSA-USA]**
+3. **[Introduction to snakemake]**
+4 .... more on the way
+
 
 ## Installation
 
